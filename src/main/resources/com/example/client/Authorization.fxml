@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane prefHeight="297.0" prefWidth="596.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.client.Controllers.AuthorizationController">
+   <children>
+      <GridPane layoutX="14.0" layoutY="14.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="278.20001220703125" minWidth="10.0" prefWidth="123.19998321533203" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="482.19995880126953" minWidth="10.0" prefWidth="442.40001678466797" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="218.20001831054688" minHeight="10.0" prefHeight="208.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="190.19998779296876" minHeight="10.0" prefHeight="59.19999999999999" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Enter session key" />
+            <TextField fx:id="sessionIdField" GridPane.columnIndex="1" />
+            <Label text="Or create new session" GridPane.rowIndex="1" />
+            <Button fx:id="newSessionBtn" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#newSessionBtnClicked" text="New Session" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
+            </Button>
+            <Button fx:id="enterSessionBtn" mnemonicParsing="false" onMouseClicked="#joinBtnClicked" text="Enter" GridPane.halignment="CENTER">
+               <GridPane.margin>
+                  <Insets top="150.0" />
+               </GridPane.margin>
+            </Button>
+         </children>
+      </GridPane>
+   </children>
+</AnchorPane>
