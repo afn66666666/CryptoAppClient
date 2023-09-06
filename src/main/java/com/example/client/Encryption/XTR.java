@@ -1,14 +1,12 @@
 package com.example.client.Encryption;
 
-import com.example.client.LoggedException;
-
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.Random;
 
-public class XTR implements Encryptor{
+public class XTR{
     public PrimeNumberTest mode;
     int keyLength = 8;
     private PublicKey publicKey;
@@ -17,7 +15,7 @@ public class XTR implements Encryptor{
     private GFP2 traceGK;
     private GFP2 traceGB;
     private GFP2 traceGBK;
-    private BigInteger b;
+    public BigInteger b;
 
     private static Random randomizer = new Random(LocalDateTime.now().getNano());
 
@@ -49,21 +47,6 @@ public class XTR implements Encryptor{
 
         this.traceGB = tracer.calculateTracer(b, publicKey.trace);
         this.traceGBK = tracer.calculateTracer(b, traceGK);
-    }
-
-    @Override
-    public byte[] encrypt(byte[] Block) throws LoggedException {
-        return new byte[0];
-    }
-
-    @Override
-    public byte[] decrypt(byte[] block) throws LoggedException {
-        return new byte[0];
-    }
-
-    @Override
-    public void setKey(byte[] key) {
-
     }
 
     public static class PublicKey {
@@ -125,7 +108,7 @@ public class XTR implements Encryptor{
         }
     }
 
-    public BigInteger generateXTRKey() {
+    private BigInteger generateXTRKey() {
         BigInteger r, q, k, p;
         do {
             r = new BigInteger(keyLength / 2, randomizer);
@@ -161,29 +144,29 @@ public class XTR implements Encryptor{
         return p;
     }
 
-    public byte[] encryptKey(byte[] key) {
+    public byte[] encrypt(byte[] block) {
         Tracer tracer = new Tracer(this.publicKey.p);
         GFP2 traceGBK = tracer.calculateTracer(this.b, this.publicKey.traceGK);
-        BigInteger message = new BigInteger(key);
+        BigInteger message = new BigInteger(block);
         //System.out.println("message " + message);
         BigInteger cipher = message.xor(traceGBK.toBigInteger());
         //System.out.println(cipher.bitCount());
         return cipher.toByteArray();
     }
 
-    public byte[] encryptKey(byte[] key, PublicKey publicKey, BigInteger b) {
+    public byte[] encrypt(byte[] block, PublicKey publicKey, BigInteger b) {
         Tracer tracer = new Tracer(publicKey.p);
         GFP2 traceGBK = tracer.calculateTracer(b, publicKey.traceGK);
-        BigInteger message = new BigInteger(key);
+        BigInteger message = new BigInteger(block);
         //System.out.println("message " + message);
         BigInteger cipher = message.xor(traceGBK.toBigInteger());
         //System.out.println(cipher.bitCount());
         return cipher.toByteArray();
     }
 
-    public byte[] decryptKey(byte[] key) {
+    public byte[] decrypt(byte[] block) {
         Tracer tracer = new Tracer(this.publicKey.p);
-        BigInteger cipher = new BigInteger(key);
+        BigInteger cipher = new BigInteger(block);
         GFP2 decryptKey = tracer.calculateTracer(this.privateKey, this.traceGB);
         BigInteger decryptedMsg = decryptKey.toBigInteger().xor(cipher);
         //System.out.println("decryptedMsg " + Arrays.toString(decryptedMsg.toByteArray()));
@@ -196,8 +179,8 @@ public class XTR implements Encryptor{
         }
 
         Tracer tracer = new Tracer(publicKey.p);
-        //BigInteger secretK = new BigInteger(keyLength / 4, randomizer);
-        //System.out.println("K " + secretK);
+        BigInteger secretK = new BigInteger(keyLength / 4, randomizer);
+        System.out.println("K " + secretK);
         GFP2 traceGK = tracer.calculateTracer(this.privateKey, publicKey.trace);
         BigInteger b;
         BigInteger upperLimit = publicKey.q.subtract(BigInteger.TWO);
@@ -205,7 +188,7 @@ public class XTR implements Encryptor{
         do {
             b = new BigInteger(upperLimit.bitLength() - 1, randomizer);
         } while (b.compareTo(upperLimit) >= 0 || b.compareTo(BigInteger.ONE) <= 0);
-        //System.out.println("Generated b");
+        System.out.println("Generated b");
         GFP2 traceGB = tracer.calculateTracer(b, publicKey.trace);
         GFP2 traceGBK = tracer.calculateTracer(b, traceGK);
 
@@ -214,7 +197,7 @@ public class XTR implements Encryptor{
         BigInteger cipher = message.xor(traceGBK.toBigInteger());
         System.out.println("cipher " + cipher);
         GFP2 decryptKey = tracer.calculateTracer(this.privateKey, traceGB);
-        //System.out.println("decryptKey " + decryptKey.toBigInteger());
+        System.out.println("decryptKey " + decryptKey.toBigInteger());
         BigInteger decryptedMsg = decryptKey.toBigInteger().xor(cipher);
         System.out.println("decryptedMsg " + decryptedMsg);
     }
@@ -222,7 +205,7 @@ public class XTR implements Encryptor{
     public BigInteger[] getPublicKey() {
         return new BigInteger[] {this.publicKey.p, this.publicKey.q,
                 this.publicKey.trace.a, this.publicKey.trace.b,
-                this.publicKey.traceGK.a, this.publicKey.traceGK.b};
+                this.publicKey.traceGK.a, this.publicKey.traceGK.b,this.b};
     }
 }
 

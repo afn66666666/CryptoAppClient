@@ -11,7 +11,9 @@ public class Message {
     }
     public int size;
     public String name;
+    /**text,binary,etc*/
     public String type;
+    /**start of file,middle or end*/
     public String status;
     public byte[] data;
 }

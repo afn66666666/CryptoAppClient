@@ -1,11 +1,10 @@
 package com.example.client.Controllers;
 
-import com.example.client.*;
-import com.example.client.Encryption.Entities;
+import com.example.client.Application;
+import com.example.client.Client;
+import com.example.client.Definitions;
 import com.example.client.Encryption.Mars;
-import com.example.client.Encryption.XTR;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import com.example.client.Settings;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -24,8 +23,7 @@ import javafx.stage.WindowEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class SettingsController implements Initializable {
-    private boolean isEditable = true;
+public class SettingsJoinController implements Initializable {
     @FXML
     private Button generateBtn;
     @FXML
@@ -37,37 +35,20 @@ public class SettingsController implements Initializable {
     @FXML
     private ChoiceBox<String> keyLengthBox;
 
+    private int session;
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        String encryptionModes[] = {"MARS(EBC)", "MARS(CBC)"};
+    public void initialize(URL location, ResourceBundle resources) {
         String keyLengths[] = {String.valueOf(Definitions.KEY_LENGTH_1),
                 String.valueOf(Definitions.KEY_LENGTH_2),
                 String.valueOf(Definitions.KEY_LENGTH_3)};
-        encryptModeBox.setItems(FXCollections.observableArrayList(encryptionModes));
         keyLengthBox.setItems(FXCollections.observableArrayList(keyLengths));
         keyLengthBox.setValue(String.valueOf(Definitions.KEY_LENGTH_1));
-        encryptModeBox.setValue(Definitions.encryptionModeName(Definitions.EncryptionMods.MARS_EBC));
+    }
 
-//        keyLengthBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number newValue) {
-//                var newLength = newValue.intValue();
-//                Settings.setKeyLength(newLength);
-//                sessionKeyField.clear();
-//            }
-//        });
-//        encryptModeBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number newValue) {
-//                var val = encryptionModes[newValue.intValue()];
-//                if(val.equals(Definitions.encryptionModeName(Definitions.EncryptionMods.MARS_EBC)) ||
-//                        val.equals(Definitions.encryptionModeName(Definitions.EncryptionMods.MARS_CBC))){
-//                    sessionKeyField.setDisable(true);
-//                    generateBtn.setDisable(true);
-//
-//                }
-//            }
-//        });
+
+    public void setInfo(int sessionId,String mode){
+        this.session = sessionId;
+        encryptModeBox.setValue(mode);
     }
 
     @FXML
@@ -95,9 +76,7 @@ public class SettingsController implements Initializable {
                 Settings.setEncryptionMode(Definitions.encryptionMode(mode));
                 Settings.setKeyLength(Integer.parseInt(keyLengthBox.getValue()));
                 Settings.setSessionKey(sessionKeyField.getText());
-//                Settings.setPublicKey(publicKeyField.getText());
-//                Settings.setPrivateKey(privateKeyField.getText());
-                Client.startSession();
+                Client.exchangeEncryptionData();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -111,4 +90,3 @@ public class SettingsController implements Initializable {
         sessionKeyField.setText(String.valueOf(s));
     }
 }
-

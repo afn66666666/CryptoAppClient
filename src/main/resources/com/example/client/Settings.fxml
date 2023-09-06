@@ -19,10 +19,10 @@
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="419.4000244140625" minWidth="10.0" prefWidth="284.20001220703125" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints maxHeight="118.59998168945313" minHeight="3.4000038146972713" prefHeight="71.79999389648438" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="243.39999618530274" minHeight="10.0" prefHeight="135.9999755859375" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="285.2000030517578" minHeight="10.0" prefHeight="162.40002441406247" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="285.2000030517578" minHeight="10.0" prefHeight="162.40002441406247" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="118.59998168945313" minHeight="3.4000038146972713" prefHeight="58.20001220703125" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="118.59998168945313" minHeight="3.4000038146972713" prefHeight="75.79998779296875" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="243.39999618530274" minHeight="10.0" prefHeight="83.5999816894531" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="285.2000030517578" minHeight="10.0" prefHeight="88.99997558593753" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Label prefHeight="18.0" prefWidth="269.0" text="Encryption method">
@@ -33,12 +33,12 @@
                   <Font name="Dubai Regular" size="20.0" />
                </font>
             </Label>
-            <ChoiceBox fx:id="encryptModeBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+            <ChoiceBox fx:id="encryptModeBox" prefWidth="150.0" GridPane.columnIndex="1">
                <GridPane.margin>
-                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                  <Insets bottom="15.0" left="15.0" right="100.0" top="15.0" />
                </GridPane.margin>
             </ChoiceBox>
-            <Label prefHeight="101.0" prefWidth="270.0" text="Key(Public)" GridPane.rowIndex="1">
+            <Label prefHeight="101.0" prefWidth="270.0" text="Session key" GridPane.rowIndex="2">
                <padding>
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                </padding>
@@ -49,38 +49,33 @@
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                </GridPane.margin>
             </Label>
-            <Label prefHeight="101.0" prefWidth="270.0" text="Key(Private)" GridPane.rowIndex="2">
-               <padding>
-                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-               </padding>
-               <font>
-                  <Font name="Dubai Regular" size="20.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-               </GridPane.margin>
-            </Label>
-            <TextField fx:id="privateKeyField" GridPane.columnIndex="1" GridPane.rowIndex="2">
-               <GridPane.margin>
-                  <Insets bottom="15.0" left="15.0" right="80.0" top="15.0" />
-               </GridPane.margin>
-            </TextField>
             <Button fx:id="acceptBtn" mnemonicParsing="false" onMouseClicked="#acceptBtnClicked" text="Accept" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-            <Button fx:id="publicGenerateBtn" mnemonicParsing="false" onMouseClicked="#publicGenerateBtnClicked" text="Generate" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+            <Button fx:id="generateBtn" mnemonicParsing="false" onMouseClicked="#generateBtnClicked" text="Generate" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="privateGenerateBtn" mnemonicParsing="false" onMouseClicked="#privateGenerateBtnClicked" text="Generate" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
-               <GridPane.margin>
-                  <Insets right="10.0" />
-               </GridPane.margin>
-            </Button>
-            <TextField fx:id="publicKeyField" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <TextField fx:id="sessionKeyField" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets bottom="15.0" left="15.0" right="80.0" top="15.0" />
                </GridPane.margin>
             </TextField>
+            <Label text="Key length" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </GridPane.margin>
+               <font>
+                  <Font name="Dubai Regular" size="20.0" />
+               </font>
+               <padding>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </padding>
+            </Label>
+            <ChoiceBox fx:id="keyLengthBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="15.0" left="15.0" right="100.0" top="15.0" />
+               </GridPane.margin>
+            </ChoiceBox>
          </children>
       </GridPane>
    </children>

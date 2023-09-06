@@ -21,7 +21,6 @@ public class Fermat implements PrimeNumberTest {
     }
 
     private static boolean sFermaTheorem(BigInteger a, BigInteger p) {
-        System.out.println("a is " + a);
 //        var tmp1 = a.pow(p.subtract(BigInteger.ONE).intValue());
 //        System.out.println(tmp1);
 //        var tmp2 = tmp1.mod(p);

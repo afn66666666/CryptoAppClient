@@ -1,18 +1,13 @@
 package com.example.client.Encryption;
 
-import com.example.client.LoggedException;
-
 import java.util.Arrays;
-import java.util.Random;
 
 public class MarsCBC extends Mars {
-    public byte[] iv;
+    private byte[] initVector;
 
 
     public MarsCBC() {
-        iv = generateIV();
-        //TODO: delete
-        iv = new byte[]{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+        initVector = generateIV();
     }
 
     @Override
@@ -35,7 +30,7 @@ public class MarsCBC extends Mars {
         for (i = 0; i < totalSize + paddingSize; ++i) {
             if (i != 0 && i % 16 == 0) {
                 if (i == 16) {
-                    prevEncrBlock = super.encryptBlock(BitManipulations.byteArrXor(tempBuf, iv));
+                    prevEncrBlock = super.encryptBlock(BitManipulations.byteArrXor(tempBuf, initVector));
                     tempBuf = Arrays.copyOf(prevEncrBlock,16);
                 } else {
                     tempBuf = super.encryptBlock(BitManipulations.byteArrXor(tempBuf, prevEncrBlock));
@@ -55,7 +50,7 @@ public class MarsCBC extends Mars {
 
 
         if (prevEncrBlock == null) {
-            prevEncrBlock = super.encryptBlock(BitManipulations.byteArrXor(tempBuf, iv));
+            prevEncrBlock = super.encryptBlock(BitManipulations.byteArrXor(tempBuf, initVector));
             tempBuf = prevEncrBlock;
         } else {
             tempBuf = super.encryptBlock(BitManipulations.byteArrXor(tempBuf, prevEncrBlock));
@@ -80,7 +75,7 @@ public class MarsCBC extends Mars {
             if (i > 0 && i % 16 == 0) {
                 if (i == 16) {
                     prevEncBlock = Arrays.copyOf(tempBuf,16);
-                    p1 = BitManipulations.byteArrXor(iv, decryptBlock(tempBuf));
+                    p1 = BitManipulations.byteArrXor(initVector, decryptBlock(tempBuf));
                     tempBuf = Arrays.copyOf(p1,16);
                 } else {
                     var temp = Arrays.copyOf(tempBuf,16);
@@ -95,7 +90,7 @@ public class MarsCBC extends Mars {
             }
         }
         if (p1 == null) {
-            p1 = BitManipulations.byteArrXor(iv, decryptBlock(tempBuf));
+            p1 = BitManipulations.byteArrXor(initVector, decryptBlock(tempBuf));
             tempBuf = p1;
         } else {
             tempBuf = BitManipulations.byteArrXor(prevEncBlock, decryptBlock(tempBuf));
@@ -105,6 +100,13 @@ public class MarsCBC extends Mars {
         return resultBlock;
     }
 
+    @Override
+    public byte[] getInitVector(){
+        return initVector;
+    }
 
-
+    @Override
+    public void setInitVector(byte[] bytes){
+        initVector = bytes;
+    }
 }

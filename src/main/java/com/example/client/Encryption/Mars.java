@@ -86,25 +86,6 @@ public class Mars implements Encryptor {
 
     @Override
     public byte[] encrypt(byte[] in) {
-//        if (expandedKey == null) {
-//            throw new LoggedException("out of key");
-//        }
-//        var totalSize = in.length;
-//        paddingSize = 0;
-//        var padding = new byte[0];
-//        int i = 0;
-//        int paddingIndex = 0;
-//        if (totalSize % 16 != 0) {
-//            paddingSize = 16 - totalSize % 16;
-//            padding = new byte[paddingSize];
-//            padding[0] = (byte) 0x80;
-//            for (i = 1; i < paddingSize; i++)
-//                padding[i] = 0;
-//        }
-//        var tempBuf = new byte[16];
-//        var resultBlock = new byte[totalSize + paddingSize];
-
-
         var blocks = splitInput(in);
         var result = new byte[blocks.length*16];
         for(int i =0; i<blocks.length;++i){
@@ -113,25 +94,6 @@ public class Mars implements Encryptor {
         }
         return result;
 
-
-//        for (i = 0; i < totalSize + paddingSize; ++i) {
-//            if (i != 0 && i % 16 == 0) {
-//                tempBuf = encryptBlock(tempBuf);
-//                System.arraycopy(tempBuf, 0, resultBlock, i - 16, tempBuf.length);
-//            }
-//            if (i < totalSize) {
-//                tempBuf[i % 16] = in[i];
-//            } else {
-//                tempBuf[i % 16] = padding[paddingIndex % 16];
-//                paddingIndex++;
-//
-//            }
-//        }
-//        if (tempBuf.length == 16) {
-//            tempBuf = encryptBlock(tempBuf);
-//            System.arraycopy(tempBuf, 0, resultBlock, i - 16, tempBuf.length);
-//        }
-//        return resultBlock;
     }
 
     @Override
@@ -164,6 +126,9 @@ public class Mars implements Encryptor {
         while (input[i] == 0) {
             count++;
             i--;
+            if(count == 16){
+                return input;
+            }
         }
         byte[] tmp;
         if (count == 0) {
@@ -512,6 +477,16 @@ public class Mars implements Encryptor {
      */
     public void setKey(byte[] key) {
         expandedKey = expandKey(key);
+    }
+
+    @Override
+    public byte[] getInitVector() {
+        return new byte[0];
+    }
+
+    @Override
+    public void setInitVector(byte[] block) {
+        return;
     }
 
 

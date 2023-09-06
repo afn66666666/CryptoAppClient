@@ -2,6 +2,9 @@ package com.example.client.Controllers;
 
 import com.example.client.Application;
 import com.example.client.Client;
+import com.example.client.Definitions;
+import com.example.client.Settings;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -52,7 +55,7 @@ public class AuthorizationController implements Initializable {
         try {
             var prevStage = (Stage)newSessionBtn.getScene().getWindow();
             prevStage.close();
-            var fxmlLoader = new FXMLLoader(Application.class.getResource("mainView.fxml"));
+            var fxmlLoader = new FXMLLoader(Application.class.getResource("SettingsJoin.fxml"));
             var scene = new Scene(fxmlLoader.load(), 600, 500);
             var stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -67,6 +70,14 @@ public class AuthorizationController implements Initializable {
             var sessionId = sessionIdField.getText();
             var intVal = Integer.valueOf(sessionId);
             Client.joinToSession(intVal);
+            var controller = fxmlLoader.<SettingsJoinController>getController();
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    controller.setInfo(Integer.valueOf(sessionIdField.getText()),
+                            Definitions.encryptionModeName(Settings.getEncryptionMode()));
+                }
+            });
         }
         catch(Exception e){
             System.out.println(e.getMessage());
