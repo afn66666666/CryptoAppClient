@@ -43,6 +43,7 @@ public class SettingsJoinController implements Initializable {
                 String.valueOf(Definitions.KEY_LENGTH_3)};
         keyLengthBox.setItems(FXCollections.observableArrayList(keyLengths));
         keyLengthBox.setValue(String.valueOf(Definitions.KEY_LENGTH_1));
+
     }
 
 
@@ -86,7 +87,7 @@ public class SettingsJoinController implements Initializable {
     @FXML
     public void generateBtnClicked(MouseEvent event) {
 
-        var bytes = Mars.generatePublicKey(16);
+        var bytes = Mars.generatePublicKey(Integer.valueOf(keyLengthBox.getValue())/8);
         sessionKeyField.setText(new String(bytes));
     }
 }

@@ -5,12 +5,10 @@ import com.example.client.Controllers.ProgressBarController;
 import com.example.client.Encryption.*;
 import com.google.gson.Gson;
 import javafx.application.Platform;
-import javafx.scene.shape.Path;
 
 import java.io.*;
 import java.math.BigInteger;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -23,8 +21,6 @@ public class Client {
     private static Encryptor encryptor;
     private static byte[] fileBuf = null;
     private static int byteCounter = 0;
-    private static int sessionId;
-    private static byte[] decryptKey;
 
     public static File loadDir;
 
@@ -56,62 +52,27 @@ public class Client {
             var xtr = new XTR(Entities.TestMode.Ferma, 45);
             var publicKey = xtr.getPublicKey();
             writePublicKey(publicKey);
-            var userPublicKeyArr = readPublicKey();
 
             var stringMessage = in.readLine();
             var msg = new Gson().fromJson(stringMessage, Message.class);
             msg.data = Base64.getDecoder().decode(msg.data);
-            var decryptionKey = xtr.decrypt(msg.data);
-            decryptKey = decryptionKey;
-            MainViewController.log("GET PRIVATE KEY : " + new String(decryptKey));
+            var sessionKey = xtr.decrypt(msg.data);
+            Settings.setSessionKey(new String(sessionKey));
+            MainViewController.log("GET PRIVATE KEY : " + new String(sessionKey));
 
-            var userPublicKey = new XTR.PublicKey(userPublicKeyArr[0],userPublicKeyArr[1],
-                    new GFP2(userPublicKeyArr[0],userPublicKeyArr[2],userPublicKeyArr[3]),
-                    new GFP2(userPublicKeyArr[0],userPublicKeyArr[4],userPublicKeyArr[5]));
-            var encryptedKey = xtr.encrypt(Settings.getSessionKey().getBytes(),userPublicKey,userPublicKeyArr[6]);
-            writeEncryptionData("encryptedKey",encryptedKey);
-
-//            var xtr = new XTR(Entities.TestMode.Ferma, 45);
-//            var publicKey = xtr.getPublicKey();
-//            String result = publicKey[0] + " ";
-//            for(int i = 1;i<7;++i){
-//                result += publicKey[i] + " ";
-//            }
-//            writeSystemMessage(result);
-//            var userPKeyMessage = readMessage();
-//            var bytes = userPKeyMessage.getBytes();
-//            var encryptedUserKey = readMessage();
-//            var encryptedBytes = encryptedUserKey.getBytes();
-//            var decrypted = xtr.decrypt(encryptedUserKey.getBytes());
-//            var test = new String(decrypted);
-//            var parts = userPKeyMessage.split(" ");
-//            BigInteger[] intParts = new BigInteger[7];
-//            for(int i = 0;i<parts.length;++i) {
-//                intParts[i] = new BigInteger(parts[i]);
-//            }
-//            var userPKey = new XTR.PublicKey(intParts[0], intParts[1],
-//                    new GFP2(intParts[0], intParts[2], intParts[3]), new GFP2(intParts[0], intParts[4], intParts[5]));
-//            var encryptedHostKey = xtr.encrypt(Settings.getSessionKey().getBytes(),userPKey,intParts[6]);
-//            writeEncryptionData("encryptedKey",new String(encryptedHostKey));
-//            encryptedKey = encryptedUserKey;
-//            pKey = userPKey;
+//            var userPublicKey = new XTR.PublicKey(userPublicKeyArr[0],userPublicKeyArr[1],
+//                    new GFP2(userPublicKeyArr[0],userPublicKeyArr[2],userPublicKeyArr[3]),
+//                    new GFP2(userPublicKeyArr[0],userPublicKeyArr[4],userPublicKeyArr[5]));
+//            var encryptedKey = xtr.encrypt(Settings.getSessionKey().getBytes(),userPublicKey,userPublicKeyArr[6]);
+//            writeEncryptionData("encryptedKey",encryptedKey);
         } catch (IOException e) {
             MainViewController.log("cant connect to server 4004. Try restart client application");
         }
 
     }
 
-    private static byte[] readEncryptedKey(){
-        return  new byte[0];
-    }
-
-    private static void writeEncryptedKey(){
-        
-    }
-
     public static void joinToSession(int id) {
         try {
-            sessionId = id;
             clientSocket = new Socket("localhost", 4004);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
@@ -283,14 +244,6 @@ public class Client {
         var msg = new Message(file.getName(), "load", "", 0, new byte[0]);
         //send uploading request to server
         writeMessage(msg);
-        var parentDir = file.getParent();
-        var socketId = parentDir.substring(parentDir.lastIndexOf("\\") + 1,parentDir.length());
-        if(Integer.valueOf(socketId) == clientSocket.getLocalPort()){
-            encryptor.setKey(Settings.getSessionKey().getBytes());
-        }
-        else{
-            encryptor.setKey(decryptKey);
-        }
         while (status != "ready") {
             status = readMessage();
         }
@@ -364,29 +317,17 @@ public class Client {
     public static void exchangeEncryptionData() {
         encryptor.setKey(Settings.getSessionKey().getBytes());
         var xtr = new XTR(Entities.TestMode.Ferma, 45);
-        var publicKey = xtr.getPublicKey();
-
-        writePublicKey(publicKey);
+//        var publicKey = xtr.getPublicKey();
+//
+//        writePublicKey(publicKey);
         var hostPublicKey = readPublicKey();
         var hostPKey = new XTR.PublicKey(hostPublicKey[0], hostPublicKey[1],
                 new GFP2(hostPublicKey[0], hostPublicKey[2], hostPublicKey[3]),
                 new GFP2(hostPublicKey[0], hostPublicKey[4], hostPublicKey[5]));
 
-        var test = "asdjand";
         var encryptedSessionKey = xtr.encrypt(Settings.getSessionKey().getBytes(), hostPKey,hostPublicKey[6]);
         writeSystemMessage(encryptedSessionKey);
-
-        String data = null;
-        try {
-            data = in.readLine();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        Message msg = new Gson().fromJson(data, Message.class);
-        var encryptedUserKey = Base64.getDecoder().decode(msg.data);
-        var decrypted = xtr.decrypt(encryptedUserKey);
-        decryptKey = decrypted;
-        MainViewController.log("GET PRIVATE KEY : " + new String(decryptKey));
+        System.out.println("send message " + new String(encryptedSessionKey));
     }
 
     public static void writeMessage(Message msg) {

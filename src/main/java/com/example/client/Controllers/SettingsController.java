@@ -25,13 +25,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class SettingsController implements Initializable {
-    private boolean isEditable = true;
-    @FXML
-    private Button generateBtn;
     @FXML
     private ChoiceBox<String> encryptModeBox;
-    @FXML
-    private TextField sessionKeyField;
     @FXML
     private Button acceptBtn;
     @FXML
@@ -47,21 +42,13 @@ public class SettingsController implements Initializable {
         keyLengthBox.setItems(FXCollections.observableArrayList(keyLengths));
         keyLengthBox.setValue(String.valueOf(Definitions.KEY_LENGTH_1));
         encryptModeBox.setValue(Definitions.encryptionModeName(Definitions.EncryptionMods.MARS_EBC));
-        keyLengthBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
-                sessionKeyField.clear();
-            }
-        });
+
     }
 
     @FXML
     public void acceptBtnClicked(MouseEvent event) {
         try {
-            if (sessionKeyField.getText().isEmpty()) {
-                var warning = new Alert(Alert.AlertType.ERROR, "fill key fields");
-                warning.showAndWait();
-            } else {
+
                 var prevStage = (Stage) acceptBtn.getScene().getWindow();
                 prevStage.close();
                 var fxmlLoader = new FXMLLoader(Application.class.getResource("mainView.fxml"));
@@ -79,21 +66,11 @@ public class SettingsController implements Initializable {
                 var mode = encryptModeBox.getValue();
                 Settings.setEncryptionMode(Definitions.encryptionMode(mode));
                 Settings.setKeyLength(Integer.parseInt(keyLengthBox.getValue()));
-                Settings.setSessionKey(sessionKeyField.getText());
-//                Settings.setPublicKey(publicKeyField.getText());
-//                Settings.setPrivateKey(privateKeyField.getText());
+//                Settings.setSessionKey(sessionKeyField.getText());
                 Client.startSession();
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @FXML
-    public void generateBtnClicked(MouseEvent event) {
-
-        var bytes = Mars.generatePublicKey(Integer.valueOf(keyLengthBox.getValue())/8);
-        sessionKeyField.setText(new String(bytes));
     }
 }
 
