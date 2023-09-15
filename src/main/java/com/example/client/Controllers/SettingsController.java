@@ -47,27 +47,12 @@ public class SettingsController implements Initializable {
         keyLengthBox.setItems(FXCollections.observableArrayList(keyLengths));
         keyLengthBox.setValue(String.valueOf(Definitions.KEY_LENGTH_1));
         encryptModeBox.setValue(Definitions.encryptionModeName(Definitions.EncryptionMods.MARS_EBC));
-
-//        keyLengthBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number newValue) {
-//                var newLength = newValue.intValue();
-//                Settings.setKeyLength(newLength);
-//                sessionKeyField.clear();
-//            }
-//        });
-//        encryptModeBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number newValue) {
-//                var val = encryptionModes[newValue.intValue()];
-//                if(val.equals(Definitions.encryptionModeName(Definitions.EncryptionMods.MARS_EBC)) ||
-//                        val.equals(Definitions.encryptionModeName(Definitions.EncryptionMods.MARS_CBC))){
-//                    sessionKeyField.setDisable(true);
-//                    generateBtn.setDisable(true);
-//
-//                }
-//            }
-//        });
+        keyLengthBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
+                sessionKeyField.clear();
+            }
+        });
     }
 
     @FXML
@@ -107,8 +92,8 @@ public class SettingsController implements Initializable {
     @FXML
     public void generateBtnClicked(MouseEvent event) {
 
-        var s = Mars.generatePublicKey(16);
-        sessionKeyField.setText(String.valueOf(s));
+        var bytes = Mars.generatePublicKey(Integer.valueOf(keyLengthBox.getValue())/8);
+        sessionKeyField.setText(new String(bytes));
     }
 }
 

@@ -86,7 +86,7 @@ public class SettingsJoinController implements Initializable {
     @FXML
     public void generateBtnClicked(MouseEvent event) {
 
-        var s = Mars.generatePublicKey(16);
-        sessionKeyField.setText(String.valueOf(s));
+        var bytes = Mars.generatePublicKey(16);
+        sessionKeyField.setText(new String(bytes));
     }
 }

@@ -20,9 +20,6 @@ public class MarsCBC extends Mars {
         if (totalSize % 16 != 0) {
             paddingSize = 16 - totalSize % 16;
             padding = new byte[paddingSize];
-            padding[0] = (byte) 0x80;
-            for (i = 1; i < paddingSize; i++)
-                padding[i] = 0;
         }
         var tempBuf = new byte[16];
         var resultBlock = new byte[totalSize + paddingSize];

@@ -134,7 +134,7 @@ public class Mars implements Encryptor {
         if (count == 0) {
             tmp = new byte[input.length];
         } else {
-            tmp = new byte[input.length - count - 1];
+            tmp = new byte[input.length - count];
         }
         System.arraycopy(input, 0, tmp, 0, tmp.length);
         return tmp;
@@ -276,9 +276,6 @@ public class Mars implements Encryptor {
             result = new byte[blocksAmount + 1][16];
             paddingSize = 16 - totalSize % 16;
             padding = new byte[paddingSize];
-//            padding[0] = (byte) 0x80;
-//            for (i = 1; i < paddingSize; i++)
-//                padding[i] = 0;
         } else {
             result = new byte[blocksAmount][16];
         }
