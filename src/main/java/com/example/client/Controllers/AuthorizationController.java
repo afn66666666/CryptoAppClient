@@ -75,7 +75,7 @@ public class AuthorizationController implements Initializable {
                 @Override
                 public void run() {
                     controller.setInfo(Integer.valueOf(sessionIdField.getText()),
-                            Definitions.encryptionModeName(Settings.getEncryptionMode()));
+                            Definitions.encryptionModeName(Settings.getEncryptionMode()),Settings.getKeyLength());
                 }
             });
         }

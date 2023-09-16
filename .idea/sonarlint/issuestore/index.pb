@@ -11,3 +11,9 @@ e
 5src/main/java/com/example/client/Encryption/GFP2.java,a\d\ad97a14494a80bf380ce34479e2ce505776a16dd
 p
 @src/main/java/com/example/client/Encryption/PrimeNumberTest.java,d\e\defbd5adb09c6d5db865603a383ac7d34505ac1b
+w
+Gsrc/main/java/com/example/client/Controllers/ProgressBarController.java,9\9\995ea745340e89db9533f96a4a1578de8a87c79b
+]
+-src/main/java/com/example/client/Message.java,8\9\89f2ad56237f327ed9e7fc89eb72ba99f8ebd07a
+a
+1src/main/java/com/example/client/Application.java,b\9\b9ac099e8e7fab8d580630d741c0b6a92991e14b

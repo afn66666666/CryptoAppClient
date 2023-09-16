@@ -25,8 +25,6 @@ import java.util.ResourceBundle;
 
 public class SettingsJoinController implements Initializable {
     @FXML
-    private Button generateBtn;
-    @FXML
     private ChoiceBox<String> encryptModeBox;
     @FXML
     private TextField sessionKeyField;
@@ -42,14 +40,17 @@ public class SettingsJoinController implements Initializable {
                 String.valueOf(Definitions.KEY_LENGTH_2),
                 String.valueOf(Definitions.KEY_LENGTH_3)};
         keyLengthBox.setItems(FXCollections.observableArrayList(keyLengths));
-        keyLengthBox.setValue(String.valueOf(Definitions.KEY_LENGTH_1));
+        keyLengthBox.setValue(String.valueOf(Settings.getKeyLength()));
+        keyLengthBox.setDisable(true);
+        encryptModeBox.setDisable(true);
 
     }
 
 
-    public void setInfo(int sessionId,String mode){
+    public void setInfo(int sessionId,String mode,int keyLength){
         this.session = sessionId;
         encryptModeBox.setValue(mode);
+        keyLengthBox.setValue(String.valueOf(keyLength));
     }
 
     @FXML

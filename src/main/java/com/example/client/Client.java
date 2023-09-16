@@ -38,6 +38,7 @@ public class Client {
             }
             writeSystemMessage(String.valueOf(Definitions.CREATE_SESSION_MACROS));
             writeSystemMessage(Definitions.encryptionModeName(Settings.getEncryptionMode()));
+            writeSystemMessage(String.valueOf(Settings.getKeyLength()));
 
             //send initVector (if it needs)
             var initVector = encryptor.getInitVector();
@@ -79,6 +80,7 @@ public class Client {
             writeSystemMessage("0");
             writeSystemMessage(String.valueOf(id));
             var encryptionMode = readMessage();
+            var keyLength = Integer.valueOf(readMessage());
             if (encryptionMode.equals(Definitions.encryptionModeName(Definitions.EncryptionMods.MARS_CBC))) {
                 encryptor = new MarsCBC();
                 var iv = readMessage();
@@ -90,6 +92,7 @@ public class Client {
                 encryptor = new Mars();
                 Settings.setEncryptionMode(Definitions.EncryptionMods.MARS_EBC);
             }
+            Settings.setKeyLength(keyLength);
             var res = readMessage();
 
             // sending encryption info

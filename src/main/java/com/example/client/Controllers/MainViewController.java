@@ -118,8 +118,10 @@ public class MainViewController implements Initializable {
             resDir.mkdir();
             chooser.setInitialDirectory(resDir);
             var selectedDir = chooser.showDialog(null);
-            Client.loadDir = selectedDir;
-            Client.uploadFile(file);
+            if(selectedDir!=null) {
+                Client.loadDir = selectedDir;
+                Client.uploadFile(file);
+            }
         }
     }
 
